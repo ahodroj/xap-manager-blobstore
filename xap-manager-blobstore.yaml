@@ -1,0 +1,128 @@
+swagger: '2.0'
+info:
+  version: '1.0.0'
+  title: GigaSpaces XAP BlobStore Management API
+  description: The GigaSpaces blobstore API makes it simple to manage and interact different blobstores without having to build a processing unit descriptor. See XAP MemoryXtend documentation for more information. 
+  
+basePath: /
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /blobstores:
+    get:
+      description: Returns all blobstores currently deployed in the grid
+      operationId: findBlobstores
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: blobstore response
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/blobstore'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    post:
+      description: Deploy a new blobstore in the grid. 
+      operationId: addBlobstore
+      produces:
+        - application/json
+      parameters:
+        - name: blobstore
+          in: body
+          description: Blobstore to deploy
+          required: true
+          schema:
+            $ref: '#/definitions/newBlobstore'
+      responses:
+        '200':
+          description: blobstore response
+          schema:
+            $ref: '#/definitions/blobstore'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+  /blobstores/{id}:
+    get:
+      description: Returns a specific blobstore by space name
+      operationId: findBlobStoreByName
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: ID of blobstore to get
+          required: true
+          type: string
+          
+      responses:
+        '200':
+          description: pet response
+          schema:
+            $ref: '#/definitions/blobstore'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+    delete:
+      description: deletes a single pet based on the ID supplied
+      operationId: deletePet
+      parameters:
+        - name: id
+          in: path
+          description: ID of pet to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: pet deleted
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/errorModel'
+definitions:
+  blobstore:
+    type: object
+    required:
+      - id
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      tag:
+        type: string
+  newBlobstore:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      tag:
+        type: string
+  errorModel:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
